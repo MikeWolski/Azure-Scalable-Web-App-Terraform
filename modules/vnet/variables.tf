@@ -15,7 +15,6 @@ variable "vnet_name" {
 
 variable "address_space" {
   description = "The address space for the virtual network"
-  type        = list(string)
 }
 
 variable "web_subnet_name" {
@@ -25,7 +24,6 @@ variable "web_subnet_name" {
 
 variable "web_subnet_cidr" {
   description = "The CIDR block for the web subnet"
-  type        = string
 }
 
 variable "db_subnet_name" {
@@ -35,5 +33,4 @@ variable "db_subnet_name" {
 
 variable "db_subnet_cidr" {
   description = "The CIDR block for the database subnet"
-  type        = string
 }
