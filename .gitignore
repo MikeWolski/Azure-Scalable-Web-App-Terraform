@@ -1,0 +1,9 @@
+.terraform
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+terraform-provider-azurerm_v4.4.0_x5.exe
