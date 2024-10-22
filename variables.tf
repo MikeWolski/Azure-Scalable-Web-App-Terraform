@@ -42,3 +42,22 @@ variable "db_subnet_cidr" {
   description = "The CIDR block for the database subnet"
   default     = ["10.0.1.0/24"]
 }
+
+variable "initial_instance_count" {
+  description = "The number of web VMs to deploy"
+  type        = number
+  default     = 2
+}
+
+variable "admin_username" {
+  description = "The admin username for the VMs"
+  type        = string
+  default     = "Mike"
+}
+
+variable "admin_password" {
+  description = "The admin password for the VMs"
+  type        = string
+  sensitive   = true
+  default     = "Skilling123!"
+}
