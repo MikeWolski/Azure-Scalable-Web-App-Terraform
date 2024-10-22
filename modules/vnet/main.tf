@@ -21,12 +21,3 @@ resource "azurerm_subnet" "db_subnet" {
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.db_subnet_cidr
 }
-
-# Output Subnet IDs
-output "web_subnet_id" {
-  value = azurerm_subnet.web_subnet.id
-}
-
-output "db_subnet_id" {
-  value = azurerm_subnet.db_subnet.id
-}

@@ -34,7 +34,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
   sku                 = "Standard_B2s"
   instances           = var.initial_instance_count
   admin_username      = var.admin_username
-  admin_password      = var.admin_password
 
   admin_ssh_key {
     username   = var.admin_username
@@ -64,12 +63,9 @@ resource "azurerm_linux_virtual_machine_scale_set" "vmss" {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
-
-
-
 }
 
-# Optional: Load Balancer Rule (for HTTP traffic)
+# Load Balancer Rule (for HTTP traffic)
 resource "azurerm_lb_rule" "lb_rule" {
   name                           = "HTTP"
   loadbalancer_id                = azurerm_lb.load_balancer.id

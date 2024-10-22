@@ -23,19 +23,6 @@ variable "subnet_id" {
   type        = string
 }
 
-variable "admin_username" {
-  description = "The admin username for the virtual machines"
-  type        = string
-  default     = "Mike"
-}
-
-variable "admin_password" {
-  description = "The admin password for the virtual machines"
-  type        = string
-  sensitive   = true
-  default     = "Skilling123!"
-}
-
 variable "frontend_ip_config" {
   description = "The name of the frontend IP configuration"
   type        = string
@@ -49,4 +36,10 @@ variable "backend_address_pool_name" {
 variable "ssh_public_key_path" {
   description = "The path to the SSH public key to be used for VM authentication"
   type        = string
+}
+
+variable "admin_username" {
+  description = "The admin username for the virtual machines"
+  type        = string
+  default     = "Mike"
 }

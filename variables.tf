@@ -55,9 +55,3 @@ variable "admin_username" {
   default     = "Mike"
 }
 
-variable "admin_password" {
-  description = "The admin password for the VMs"
-  type        = string
-  sensitive   = true
-  default     = "Skilling123!"
-}

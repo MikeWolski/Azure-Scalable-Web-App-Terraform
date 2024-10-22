@@ -48,8 +48,6 @@ module "web_vmss_with_lb" {
   resource_group_name = var.resource_group_name
   location            = var.location
   subnet_id           = module.vnet.web_subnet_id
-  admin_username      = var.admin_username
-  admin_password      = var.admin_password
   initial_instance_count = 2
   frontend_ip_config  = "web-lb-ip"
   backend_address_pool_name = "web-backend-pool"
