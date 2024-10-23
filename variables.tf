@@ -1,19 +1,19 @@
 variable "resource_group_name" {
   description = "The name of the resource group"
   type        = string
-  default     = "MWProject2"
+  default     = "MWProject2RG"
 }
 
 variable "location" {
   description = "The Azure region where the resources should be created"
   type        = string
-  default     = "East US"
+  default     = "Central US"
 }
 
 variable "vnet_name" {
   description = "The name of the virtual network"
   type        = string
-  default     = "WolskNET"
+  default     = "Project2VNET"
 }
 
 variable "address_space" {
@@ -55,3 +55,14 @@ variable "admin_username" {
   default     = "Mike"
 }
 
+variable "db_admin_password" {
+  description = "The admin password for the SQL Server"
+  type        = string
+  default     = "ChangeM3N0w!"
+}
+
+variable "db_admin_username" {
+  description = "The admin username for the SQL Server"
+  type        = string
+  default     = "sqladmin"
+}

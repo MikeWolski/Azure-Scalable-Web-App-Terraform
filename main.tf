@@ -21,6 +21,9 @@ module "vnet" {
   web_subnet_cidr     = var.web_subnet_cidr
   db_subnet_name      = var.db_subnet_name
   db_subnet_cidr      = var.db_subnet_cidr
+  depends_on = [
+    azurerm_resource_group.rg,
+  ]
 }
 
 # Call the NSG module for the web subnet
@@ -30,6 +33,9 @@ module "web_nsg" {
   location            = azurerm_resource_group.rg.location
   nsg_name            = "${var.web_subnet_name}-nsg"
   subnet_id           = module.vnet.web_subnet_id
+  depends_on = [
+    module.vnet,
+  ]
 }
 
 # Call the NSG module for the database subnet
@@ -39,6 +45,9 @@ module "db_nsg" {
   location            = azurerm_resource_group.rg.location
   nsg_name            = "${var.db_subnet_name}-nsg"
   subnet_id           = module.vnet.db_subnet_id
+  depends_on = [
+    module.vnet,
+  ]
 }
 
 # Deploy VMSS with LB for the web tier
@@ -52,18 +61,36 @@ module "web_vmss_with_lb" {
   frontend_ip_config  = "web-lb-ip"
   backend_address_pool_name = "web-backend-pool"
   ssh_public_key_path   = "~/.ssh/id_rsa.pub"
+  depends_on = [
+    module.web_nsg,
+  ]
 }
 
-# Deploy SQL Server and Database
-module "sql_database" {
-  source                 = "./modules/sql"
+# Deploy SQL Managed Intance
+module "sql_managed_instance" {
+  source                 = "./modules/sqldb"
   resource_group_name    = var.resource_group_name
   location               = var.location
   admin_username         = var.db_admin_username
   admin_password         = var.db_admin_password
-  db_name                = "webapp_db"
-  sku_name               = "StandardS1"
+  db_name                = "project2-webapp-mi"
+  sku_name               = "GP_Gen5"
   db_subnet_id           = module.vnet.db_subnet_id
-  db_subnet_ip_range_start = "10.0.1.0"
-  db_subnet_ip_range_end   = "10.0.1.255"
+  db_subnet_name         = module.vnet.db_subnet_name
+  db_nsg_id              = module.db_nsg.db_nsg_id
+  depends_on = [
+    module.db_nsg,
+  ]
+}
+
+# Deploy the storage account
+module "storage_account" {
+  source                 = "./modules/sa"
+  resource_group_name    = var.resource_group_name
+  location               = var.location
+  storage_account_name   = "mwproject2webappstorage"
+  container_name         = "static-content"
+  depends_on = [
+    azurerm_resource_group.rg,
+  ]
 }

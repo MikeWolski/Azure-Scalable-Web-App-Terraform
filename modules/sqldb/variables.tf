@@ -4,30 +4,30 @@ variable "resource_group_name" {
 }
 
 variable "location" {
-  description = "Azure location"
+  description = "Azure db location"
   type        = string
 }
 
 variable "admin_username" {
-  description = "Administrator username for the SQL Server"
+  description = "Administrator username for the SQL Managed Instance"
   type        = string
 }
 
 variable "admin_password" {
-  description = "Administrator password for the SQL Server"
+  description = "Administrator password for the SQL Managed Instance"
   type        = string
   sensitive   = true
 }
 
 variable "db_name" {
-  description = "The name of the SQL Database"
+  description = "The name of the SQL Managed Instance"
   type        = string
 }
 
 variable "sku_name" {
-  description = "The SKU for the SQL Database"
+  description = "The SKU for the SQL Managed Instance"
   type        = string
-  default     = "Basic"
+  default     = "GP_Gen5"
 }
 
 variable "db_subnet_id" {
@@ -35,12 +35,12 @@ variable "db_subnet_id" {
   type        = string
 }
 
-variable "db_subnet_ip_range_start" {
-  description = "Start IP range for the firewall rule (DB subnet)"
+variable "db_subnet_name" {
+  description = "The name of the database subnet"
   type        = string
 }
 
-variable "db_subnet_ip_range_end" {
-  description = "End IP range for the firewall rule (DB subnet)"
+variable "db_nsg_id" {
+  description = "The ID of the database subnet for VNet integration"
   type        = string
 }
