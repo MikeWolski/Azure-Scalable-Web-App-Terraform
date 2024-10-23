@@ -54,3 +54,16 @@ module "web_vmss_with_lb" {
   ssh_public_key_path   = "~/.ssh/id_rsa.pub"
 }
 
+# Deploy SQL Server and Database
+module "sql_database" {
+  source                 = "./modules/sql"
+  resource_group_name    = var.resource_group_name
+  location               = var.location
+  admin_username         = var.db_admin_username
+  admin_password         = var.db_admin_password
+  db_name                = "webapp_db"
+  sku_name               = "StandardS1"
+  db_subnet_id           = module.vnet.db_subnet_id
+  db_subnet_ip_range_start = "10.0.1.0"
+  db_subnet_ip_range_end   = "10.0.1.255"
+}
