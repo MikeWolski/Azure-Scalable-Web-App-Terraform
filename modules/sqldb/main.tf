@@ -1,3 +1,4 @@
+# Create a managed instance and a managed database in Azure SQL Database
 resource "azurerm_mssql_managed_instance" "sql_managed_instance" {
   name                         = var.db_name
   location                     = var.location
@@ -11,9 +12,16 @@ resource "azurerm_mssql_managed_instance" "sql_managed_instance" {
   collation                    = "SQL_Latin1_General_CP1_CI_AS"
   license_type                 = "LicenseIncluded"
   public_data_endpoint_enabled = false
-  depends_on = [
-    azurerm_subnet_route_table_association.routetableassociation,
-  ]
+  depends_on                   = [ azurerm_subnet_route_table_association.routetableassociation ]
+}
+
+# Create a managed database in the managed instance
+resource "azurerm_sql_managed_database" "sql_managed_db" {
+  name                   = "project2-db"
+  managed_instance_id    = azurerm_mssql_managed_instance.sql_managed_instance.id
+  collation              = "SQL_Latin1_General_CP1_CI_AS"
+  max_size_gb            = 32
+  depends_on             = [ azurerm_mssql_managed_instance.sql_managed_instance ]
 }
 
 resource "azurerm_network_security_rule" "allow_management_inbound" {
@@ -138,3 +146,4 @@ resource "azurerm_subnet_route_table_association" "routetableassociation" {
   subnet_id      = var.db_subnet_id
   route_table_id = azurerm_route_table.routetable.id
 }
+
