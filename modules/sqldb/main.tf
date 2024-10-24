@@ -16,11 +16,9 @@ resource "azurerm_mssql_managed_instance" "sql_managed_instance" {
 }
 
 # Create a managed database in the managed instance
-resource "azurerm_sql_managed_database" "sql_managed_db" {
+resource "azurerm_mssql_managed_database" "sql_managed_db" {
   name                   = "project2-db"
   managed_instance_id    = azurerm_mssql_managed_instance.sql_managed_instance.id
-  collation              = "SQL_Latin1_General_CP1_CI_AS"
-  max_size_gb            = 32
   depends_on             = [ azurerm_mssql_managed_instance.sql_managed_instance ]
 }
 
