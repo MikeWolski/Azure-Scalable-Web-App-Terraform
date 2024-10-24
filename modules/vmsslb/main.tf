@@ -77,3 +77,63 @@ resource "azurerm_lb_rule" "lb_rule" {
   idle_timeout_in_minutes        = 4
   load_distribution              = "Default"
 }
+
+# VMSS Autoscale
+resource "azurerm_monitor_autoscale_setting" "vmss_autoscale" {
+  name                = "vmss-autoscale"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.vmss.id
+  enabled             = true
+  depends_on = [azurerm_linux_virtual_machine_scale_set.vmss,]
+
+  profile {
+    name = "defaultProfile"
+
+    capacity {
+      minimum = "2"
+      maximum = "5"
+      default = "2"
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.vmss.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "GreaterThan"
+        threshold          = 70
+      }
+
+      scale_action {
+        direction = "Increase"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.vmss.id
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 30
+      }
+
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+  }
+}
