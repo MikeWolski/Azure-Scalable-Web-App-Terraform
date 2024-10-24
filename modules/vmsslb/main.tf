@@ -70,12 +70,15 @@ resource "azurerm_lb_rule" "lb_rule" {
   name                           = "HTTP"
   loadbalancer_id                = azurerm_lb.load_balancer.id
   frontend_ip_configuration_name = azurerm_lb.load_balancer.frontend_ip_configuration[0].name
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.backend_pool.id]
   protocol                       = "Tcp"
   frontend_port                  = 80
   backend_port                   = 80
   enable_floating_ip             = false
   idle_timeout_in_minutes        = 4
   load_distribution              = "Default"
+  probe_id                       = azurerm_lb_probe.http_probe.id
+  depends_on = [azurerm_lb_probe.http_probe]
 }
 
 # VMSS Autoscale
@@ -136,4 +139,30 @@ resource "azurerm_monitor_autoscale_setting" "vmss_autoscale" {
       }
     }
   }
+}
+
+resource "azurerm_virtual_machine_scale_set_extension" "apache_install" {
+  name                 = "install-apache"
+  virtual_machine_scale_set_id = azurerm_linux_virtual_machine_scale_set.vmss.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.1"
+
+  settings = <<SETTINGS
+    {
+        "commandToExecute": "sudo apt-get update && sudo apt-get install -y apache2 && sudo systemctl start apache2 && sudo systemctl enable apache2"
+    }
+  SETTINGS
+}
+
+
+# Health Probe
+resource "azurerm_lb_probe" "http_probe" {
+  name                = "http-health-probe"
+  loadbalancer_id     = azurerm_lb.load_balancer.id
+  protocol            = "Http"
+  port                = 80
+  request_path        = "/"
+  interval_in_seconds = 5
+  number_of_probes    = 2
 }
