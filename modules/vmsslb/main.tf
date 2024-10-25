@@ -150,7 +150,7 @@ resource "azurerm_virtual_machine_scale_set_extension" "apache_install" {
 
   settings = <<SETTINGS
     {
-        "commandToExecute": "sudo apt-get update && sudo apt-get install -y apache2 && sudo systemctl start apache2 && sudo systemctl enable apache2"
+        "commandToExecute": "sleep 300 && sudo apt-get update && sudo apt-get install -y apache2 && sudo systemctl start apache2 && sudo systemctl enable apache2"
     }
   SETTINGS
 }
